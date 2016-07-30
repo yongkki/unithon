@@ -1,18 +1,21 @@
 var express = require('express');
 var mysql = require('mysql');
-var multer = require('multer');
-var router   = express.Router();
+
+var router = express.Router();
 
 var connection = mysql.createConnection({
   'host' : 'test.c1bxpnczadfg.us-west-2.rds.amazonaws.com',
   'port' : '3307',
   'user' : 'admin',
-  'password' : '1231234',
-  'database' : 'role'
+  'password' : '12341234',
+  'database' : 'roler'
 });
 
+
+
 router.post('/create', function(req, res, next) {
-  connection.query('insert into role(rolePrimary, roleName, roleContent, user_id) values(?,?,?,?);', [req.body.rolePrimary, req.body.roleName, req.body.roleContent, req.body.user_id], function(error, cursor){
+  console.log(req.body);
+  connection.query('insert into schedule(content, startTime, endTime, user_id, role_id) values(?,?,?,?,?);', [req.body.content, req.body.startTime, req.body.endTime, req.body.user_id, req.body.role_id], function(error, cursor){
     if (error){
       res.status(500).json({result : error});
     }
@@ -23,7 +26,8 @@ router.post('/create', function(req, res, next) {
 });
 
 router.delete('/delete', function(req, res, next) {
-  connection.query('delete from role where id = ?;', [req.query.role_id], function(error, cursor){
+  console.log(req.query.id);
+  connection.query('delete from schedule where id = ?;', [req.query.id], function(error, cursor){
     if (error){
       res.status(500).json({result : error});
     }
@@ -34,7 +38,8 @@ router.delete('/delete', function(req, res, next) {
 });
 
 router.put('/update', function(req, res, next) {
-  connection.query('update role set rolePrimary = ?, roleName = ?, roleContent = ? where id = ?;', [req.body.rolePrimary, req.body.roleName, req.body.roleContent, req.body.role_id], function(error, cursor){
+  console.log(req.body);
+  connection.query('update schedule set content = ?, startTime = ?, endTime = ?, role_id = ?  where id = ?;', [req.body.content, req.body.startTime, req.body.endTime, req.body.role_id,req.body.id], function(error, cursor){
     if (error){
       res.status(500).json({result : error});
     }
@@ -46,7 +51,7 @@ router.put('/update', function(req, res, next) {
 
 router.get('/read', function(req, res, next) {
   console.log(req.query.user_id);
-  connection.query('select * from role where user_id = ?;', [req.query.user_id], function(error, cursor){
+  connection.query('select * from schedule where user_id = ?;', [req.query.user_id], function(error, cursor){
     if (error){
       res.status(500).json({result : error});
     }
@@ -58,7 +63,6 @@ router.get('/read', function(req, res, next) {
     }
   });
 });
-
 
 
 module.exports = router;
