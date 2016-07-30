@@ -7,7 +7,7 @@ var connection = mysql.createConnection({
 });
 
 router.post('/create', function(req, res, next) {
-  connection.query('insert into role(rolePrimary, roleName, roleContent, user_id) values(?,?,?,?);', [req.body.rolePrimary, req.body.roleName, req.body.roleContent, req.body.user_id], function(error, cursor){
+  connection.query('insert into todo(content, todoOrder, todoDate, role_id, user_id) values(?,?,?,?,?);', [req.body.content, req.body.todoOrder, req.body.todoDate, req.body.role_id, req.body.user_id], function(error, cursor){
     if (error){
       res.status(500).json({result : error});
     }
@@ -15,10 +15,11 @@ router.post('/create', function(req, res, next) {
       res.status(200).end();
     }
   });
+
 });
 
 router.delete('/delete', function(req, res, next) {
-  connection.query('delete from role where id = ?;', [req.query.role_id], function(error, cursor){
+  connection.query('delete from todo where id = ?;', [req.query.role_id], function(error, cursor){
     if (error){
       res.status(500).json({result : error});
     }
@@ -29,7 +30,7 @@ router.delete('/delete', function(req, res, next) {
 });
 
 router.put('/update', function(req, res, next) {
-  connection.query('update role set rolePrimary = ?, roleName = ?, roleContent = ? where id = ?;', [req.body.rolePrimary, req.body.roleName, req.body.roleContent, req.body.role_id], function(error, cursor){
+  connection.query('update todo set content = ?, todoOrder = ?, isDone = ?, role_id = ? where id = ?;', [req.body.todoContent, req.body.todoOrder, req.body.isDone, req.body.role_id, req.body.todo_id], function(error, cursor){
     if (error){
       res.status(500).json({result : error});
     }
@@ -40,8 +41,7 @@ router.put('/update', function(req, res, next) {
 });
 
 router.get('/read', function(req, res, next) {
-  console.log(req.query.user_id);
-  connection.query('select * from role where and user_id = ?;', [req.query.user_id], function(error, cursor){
+  connection.query('select * from todo where todoDate = ? and user_id = ?;', [req.query.todoDate, req.query.user_id], function(error, cursor){
     if (error){
       res.status(500).json({result : error});
     }
