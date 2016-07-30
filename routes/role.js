@@ -4,63 +4,61 @@ var multer = require('multer');
 var router = express.Router();
 
 var connection = mysql.createConnection({
-  'host' : 'test.c1bxpnczadfg.us-west-2.rds.amazonaws.com',
-  'port' : '3307',
-  'user' : 'admin',
-  'password' : '12341234',
-  'database' : 'test'
+  'host' : '',
+  'port' : '',
+  'user' : '',
+  'password' : '',
+  'database' : ''
 });
 
-
-var _storage = multer.diskStorage({
-    destination: function(req, file, cb){   //디렉토리 위치
-        cb(null, 'uploads/');
-    },
-    filename: function(req, file, cb){  //파일명
-        cb(null, Date.now() + "." + file.originalname.split('.').pop());
-    }
-});
-
-
-var upload = multer({ storage: _storage });
-
-router.post('/test', upload.single('userPhoto'), function(req, res, next){
-  var filename = req_up.file.filename;
-  var path = req_up.file.path;
-  console.log(filename);
-  console.log(path);
-  res.status(200).json({result : filename});
-})
-/* GET home page. */
-router.post('/up', upload.single('userPhoto'),function(req, res, next) {
-  var filename = req_up.file.filename;
-  var path = req_up.file.path;
-  console.log(path);
-  connection.query('insert into user(name, email, password, picture_id) values(?,?,?,?);', [req.body.name, req.body.email, req.body.password, filename], function(error, cursor){
+router.post('/create', function(req, res, next) {
+  connection.query('insert into role(rolePrimary, roleName, roleContent, user_id) values(?,?,?,?);', [req.body.rolePrimary, req.body.roleName, req.body.roleContent, req.body.user_id], function(error, cursor){
     if (error){
       res.status(500).json({result : error});
     }
     else {
-      res.status(200).json({email : req.body.email});
+      res.status(200).end();
     }
   });
-
 });
 
-
-router.get('/duplitcation', function(req, res, next){
-  connection.query('select * from user where email = ?', [req.query.email], function(error, cursor){
-    console.log()
+router.delete('/delete', function(req, res, next) {
+  connection.query('delete from role where id = ?;', [req.query.role_id], function(error, cursor){
     if (error){
-      res.status(500).json({error : error});
+      res.status(500).json({result : error});
+    }
+    else {
+      res.status(200).end();
+    }
+  });
+});
+
+router.put('/update', function(req, res, next) {
+  connection.query('update role set rolePrimary = ?, roleName = ?, roleContent = ? where id = ?;', [req.body.rolePrimary, req.body.roleName, req.body.roleContent, req.body.role_id], function(error, cursor){
+    if (error){
+      res.status(500).json({result : error});
+    }
+    else {
+      res.status(200).end();
+    }
+  });
+});
+
+router.get('/read', function(req, res, next) {
+  console.log(req.query.user_id);
+  connection.query('select * from role where user_id = ?;', [req.query.user_id], function(error, cursor){
+    if (error){
+      res.status(500).json({result : error});
     }
     else {
       if (cursor.length > 0)
-        res.status(200).json({result : false});
+        res.status(200).json(cursor);
       else
-        res.status(200).json({result : true});
+        res.status(200).json({result : '정보가 없습니다.'})
     }
   });
 });
+
+
 
 module.exports = router;
