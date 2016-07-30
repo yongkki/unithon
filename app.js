@@ -11,7 +11,12 @@ var routes = require('./routes/index');
 var users = require('./routes/users');
 var sign = require('./routes/sign');
 var role = require('./routes/role');
+<<<<<<< HEAD
 var schedule = require('./routes/schedule');
+=======
+var todo = require('./routes/todo');
+
+>>>>>>> 59ff24a2de1564f6bdf52141b2d2cbfca6175928
 
 var app = express();
 
@@ -31,7 +36,11 @@ app.use('/', routes);
 app.use('/users', users);
 app.use('/sign', sign);
 app.use('/role', role);
+<<<<<<< HEAD
 app.use('/schedule',schedule);
+=======
+app.use('/todo', todo);
+>>>>>>> 59ff24a2de1564f6bdf52141b2d2cbfca6175928
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

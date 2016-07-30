@@ -4,11 +4,7 @@ var multer = require('multer');
 var router   = express.Router();
 
 var connection = mysql.createConnection({
-  'host' : 'test.c1bxpnczadfg.us-west-2.rds.amazonaws.com',
-  'port' : '3307',
-  'user' : 'admin',
-  'password' : '1231234',
-  'database' : 'role'
+
 });
 
 router.post('/create', function(req, res, next) {
@@ -46,7 +42,7 @@ router.put('/update', function(req, res, next) {
 
 router.get('/read', function(req, res, next) {
   console.log(req.query.user_id);
-  connection.query('select * from role where user_id = ?;', [req.query.user_id], function(error, cursor){
+  connection.query('select * from role where and user_id = ?;', [req.query.user_id], function(error, cursor){
     if (error){
       res.status(500).json({result : error});
     }
